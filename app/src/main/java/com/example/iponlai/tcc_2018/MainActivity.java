@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Criando som de alerta
         final MediaPlayer mp_error = MediaPlayer.create(this, R.raw.alerta);
-        final MediaPlayer mp_okay = MediaPlayer.create(this, R.raw.ponto_existente);
+        final MediaPlayer mp_okay = MediaPlayer.create(this, R.raw.pontoexistente);
         final MediaPlayer mp_welcome = MediaPlayer.create(this, R.raw.welcome);
 
         //mensagem inicial
