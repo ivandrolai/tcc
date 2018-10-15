@@ -4,19 +4,22 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText inserirponto;
-
+    EditText inserirponto;
+    TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,62 +28,102 @@ public class MainActivity extends AppCompatActivity {
 
         inserirponto = (EditText) findViewById(R.id.inserirponto);
 
-        //definindo os pontos do mapa
-
-        Ponto pontounip = new Ponto();
-        pontounip.nomedoponto = "Unip";
-        pontounip.latitude = -23.253756998574232;
-        pontounip.longitude = -45.9417450428009;
-
-        Ponto pontocasa = new Ponto();
-        pontocasa.nomedoponto = "Casa";
-        pontocasa.latitude = -21.253756998574232;
-        pontocasa.longitude = -45.9417450428009;
-
-        Ponto pontosubway = new Ponto();
-        pontosubway.nomedoponto = "subway";
-        pontosubway.latitude = -23.3040886320065;
-        pontosubway.longitude = -45.96221297979355;
 
 
-        //Criando dicionario de pontos
+        //DEFININDO AS COORDENADAS DOS PONTOS
+        Ponto unipdutra = new Ponto();
+        unipdutra.nomedoponto = "Unip dutra";
+        unipdutra.latitude = -23.253756998574232;
+        unipdutra.longitude = -45.9417450428009;
 
+        Ponto limoeiro = new Ponto();
+        limoeiro.nomedoponto = "Limoeiro";
+        limoeiro.latitude = -23.2506420609090332;
+        limoeiro.longitude = -45.942635536193859;
+
+        Ponto rodjacarei = new Ponto();
+        rodjacarei.nomedoponto = "Rodoviaria Jacarei";
+        rodjacarei.latitude = -23.277777031584147;
+        rodjacarei.longitude = -45.95430850982666;
+
+        Ponto tannevescentro = new Ponto();
+        tannevescentro.nomedoponto = "Tancredo Neves Centro";
+        tannevescentro.latitude = -23.181636426650826;
+        tannevescentro.longitude = -45.81026315689087;
+
+        Ponto tannevesbairro = new Ponto();
+        tannevesbairro.nomedoponto = "Tancredo Neves Bairro";
+        tannevesbairro.latitude = -23.181675877070973;
+        tannevesbairro.longitude = -45.81053674221039;
+
+        Ponto jdmotorspani = new Ponto();
+        jdmotorspani.nomedoponto = "Jardim Motorama Spani";
+        jdmotorspani.latitude = -23.17656695088593;
+        jdmotorspani.longitude = -45.82826614379883;
+
+        //CRIANDO DICIONARIO DE PONTOS
         final Map<String,Ponto> pontos = new HashMap<String, Ponto>();
 
-        //Populando o dicionario
+        //POPULANDO O DICIONARIO
+        pontos.put("unip dutra sentido jacarei", unipdutra);
+        pontos.put("limoeiro", limoeiro);
+        pontos.put("rodoviaria de jacarei", rodjacarei);
+        pontos.put("tancredo neves sentido centro", tannevescentro);
+        pontos.put("tancredo neves sentido bairro", tannevesbairro);
+        pontos.put("jardim motorama spani", jdmotorspani);
 
-        pontos.put("unip", pontounip);
-        pontos.put("casa", pontocasa);
-        pontos.put("subway", pontosubway);
-
-        //Criando som de alerta
+        //CRIANDO SONS DE ALERTA
         final MediaPlayer mp_error = MediaPlayer.create(this, R.raw.alerta);
         final MediaPlayer mp_okay = MediaPlayer.create(this, R.raw.pontoexistente);
         final MediaPlayer mp_welcome = MediaPlayer.create(this, R.raw.welcome);
 
-        //mensagem inicial
+        //MENSAGEM INICIAL
         mp_welcome.start();
 
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR){
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
         Button ActivityBtn = (Button) findViewById(R.id.botaoG);
+
         ActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String texto = inserirponto.getText().toString().toLowerCase();
 
                 if (pontos.containsKey(texto)) {
-
-                    mp_okay.start();
 
                     Uri gmmIntenUri = Uri.parse("google.navigation:q=" + pontos.get(texto).latitude + "," + pontos.get(texto).longitude + "&mode=w");
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntenUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
-                } else {
-                    mp_error.start();
+
+                }
+                else {
+
+                    String falar = "O ponto: " + inserirponto.getText().toString() + " não existe!!";
+
+                    Toast.makeText(getApplicationContext(), falar, Toast.LENGTH_SHORT).show();
+
+                    textToSpeech.speak(falar, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         });
 
+    }
+
+    public void onPause() {
+        if (textToSpeech != null){
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onPause();
     }
 
     public class Ponto {
