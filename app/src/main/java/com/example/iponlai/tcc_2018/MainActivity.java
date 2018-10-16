@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     EditText inserirponto;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         inserirponto = (EditText) findViewById(R.id.inserirponto);
-
+        Button ActivityBtn = (Button) findViewById(R.id.botaoG);
 
 
         //DEFININDO AS COORDENADAS DOS PONTOS
@@ -67,23 +68,22 @@ public class MainActivity extends AppCompatActivity {
         final Map<String,Ponto> pontos = new HashMap<String, Ponto>();
 
         //POPULANDO O DICIONARIO
-        pontos.put("unip dutra sentido jacareí", unipdutra);
         pontos.put("unip dutra sentido jacarei", unipdutra);
         pontos.put("limoeiro", limoeiro);
-        pontos.put("rodoviária de jacareí", rodjacarei);
         pontos.put("rodoviaria de jacarei", rodjacarei);
         pontos.put("tancredo neves sentido centro", tannevescentro);
         pontos.put("tancredo neves sentido bairro", tannevesbairro);
         pontos.put("jardim motorama spani", jdmotorspani);
 
         //CRIANDO SONS DE ALERTA
-        final MediaPlayer mp_error = MediaPlayer.create(this, R.raw.alerta);
-        final MediaPlayer mp_okay = MediaPlayer.create(this, R.raw.pontoexistente);
+        //final MediaPlayer mp_error = MediaPlayer.create(this, R.raw.alerta);
+        //final MediaPlayer mp_okay = MediaPlayer.create(this, R.raw.pontoexistente);
         final MediaPlayer mp_welcome = MediaPlayer.create(this, R.raw.welcome);
 
         //MENSAGEM INICIAL
         mp_welcome.start();
 
+        //CONVERTE TEXTO EM VOZ
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -93,20 +93,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button ActivityBtn = (Button) findViewById(R.id.botaoG);
-
+        //ATIVIDADE QUE OCORRE QUANDO O BOTÃO FOR PRESSIONADO
         ActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String texto = inserirponto.getText().toString().toLowerCase();
+                //RETIRA TODOS OS ACENTOS DA SENTENÇA E TRANSFORMA A FRASE EM LETRAS MINUSCULAS
+                String texto = StringUtils.semAcentos(inserirponto.getText().toString().toLowerCase());
 
                 if (pontos.containsKey(texto)) {
 
-                    String existe = "O ponto: " + inserirponto.getText().toString() + " existe! Aguarde um momento, gerando o melhor trajeto!";
-
+                    String existe = "O ponto: " + texto + " existe! Aguarde um momento, gerando o melhor trajeto!";
                     Toast.makeText(getApplicationContext(), existe, Toast.LENGTH_SHORT).show();
-
                     textToSpeech.speak(existe, TextToSpeech.QUEUE_FLUSH, null);
 
                     Uri gmmIntenUri = Uri.parse("google.navigation:q=" + pontos.get(texto).latitude + "," + pontos.get(texto).longitude + "&mode=w");
@@ -117,11 +115,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
 
-                    String naoexiste = "O ponto: " + inserirponto.getText().toString() + " não existe!!";
-
+                    String naoexiste = "O ponto: " + texto + " não existe!!";
                     Toast.makeText(getApplicationContext(), naoexiste, Toast.LENGTH_SHORT).show();
-
                     textToSpeech.speak(naoexiste, TextToSpeech.QUEUE_FLUSH, null);
+
                 }
             }
         });
@@ -136,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }*/
 
+
+
     public class Ponto {
 
         public String nomedoponto; //PontoX
@@ -143,3 +142,4 @@ public class MainActivity extends AppCompatActivity {
         public double longitude;   //00,0000
     }
 }
+
