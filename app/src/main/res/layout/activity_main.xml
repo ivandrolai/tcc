@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    tools:context=".MainActivity"
     android:orientation="vertical"
     android:weightSum="2">
 
-    <EditText
-        android:id="@+id/inserirponto"
-        android:layout_width="match_parent"
-        android:layout_height="237dp"
-        android:layout_weight="1"
-        android:hint="Inserir Ponto"
-        android:inputType="text"
- />
 
-    <Button
-        android:id="@+id/botaoG"
-        android:layout_width="match_parent"
-        android:layout_height="272dp"
-        android:text="Navegar"
-        android:layout_weight="1" />
+        <EditText
+            android:id="@+id/inserirponto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Inserir Ponto"
+            android:inputType="text"
+            android:textSize="30sp"
+            />
+
+        <Button
+            android:id="@+id/botaoG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Navegar"
+            android:textSize="50sp"
+            android:fontFamily="casual"
+            android:textStyle="bold"
+            android:textColor="#ffff5a"
+            android:background="#2e3d9b"
+            />
 </LinearLayout>
-</android.support.constraint.ConstraintLayout>

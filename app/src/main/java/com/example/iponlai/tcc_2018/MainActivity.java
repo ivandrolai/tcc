@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -65,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         final Map<String,Ponto> pontos = new HashMap<String, Ponto>();
 
         //POPULANDO O DICIONARIO
+        pontos.put("unip dutra sentido jacareí", unipdutra);
         pontos.put("unip dutra sentido jacarei", unipdutra);
         pontos.put("limoeiro", limoeiro);
+        pontos.put("rodoviária de jacareí", rodjacarei);
         pontos.put("rodoviaria de jacarei", rodjacarei);
         pontos.put("tancredo neves sentido centro", tannevescentro);
         pontos.put("tancredo neves sentido bairro", tannevesbairro);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR){
-                    textToSpeech.setLanguage(Locale.ENGLISH);
+                    textToSpeech.setLanguage(Locale.getDefault());
                 }
             }
         });
@@ -99,6 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (pontos.containsKey(texto)) {
 
+                    String existe = "O ponto: " + inserirponto.getText().toString() + " existe! Aguarde um momento, gerando o melhor trajeto!";
+
+                    Toast.makeText(getApplicationContext(), existe, Toast.LENGTH_SHORT).show();
+
+                    textToSpeech.speak(existe, TextToSpeech.QUEUE_FLUSH, null);
+
                     Uri gmmIntenUri = Uri.parse("google.navigation:q=" + pontos.get(texto).latitude + "," + pontos.get(texto).longitude + "&mode=w");
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntenUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
@@ -107,24 +117,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
 
-                    String falar = "O ponto: " + inserirponto.getText().toString() + " não existe!!";
+                    String naoexiste = "O ponto: " + inserirponto.getText().toString() + " não existe!!";
 
-                    Toast.makeText(getApplicationContext(), falar, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), naoexiste, Toast.LENGTH_SHORT).show();
 
-                    textToSpeech.speak(falar, TextToSpeech.QUEUE_FLUSH, null);
+                    textToSpeech.speak(naoexiste, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         });
 
     }
 
-    public void onPause() {
+    /*public void onPause() {
         if (textToSpeech != null){
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
         super.onPause();
-    }
+    }*/
 
     public class Ponto {
 
