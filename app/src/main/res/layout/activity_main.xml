@@ -13,21 +13,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Inserir Ponto"
+            android:hint="@string/inserir_ponto"
             android:inputType="text"
             android:textSize="30sp"
-            />
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/botaoG"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Navegar"
-            android:textSize="50sp"
-            android:fontFamily="casual"
-            android:textStyle="bold"
-            android:textColor="#ffff5a"
             android:background="#2e3d9b"
-            />
+            android:fontFamily="casual"
+            android:text="@string/navegar"
+            android:textColor="#ffff5a"
+            android:textSize="50sp"
+            android:textStyle="bold" />
 </LinearLayout>
